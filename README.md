@@ -1,6 +1,6 @@
 # Objectives Of the Project
 
-- [ ] ⁠Create a new pipeline to build and push Docker image to Docker Hub when there are changes in the main branch
+- [x] ⁠Create a new pipeline to build and push Docker image to Docker Hub when there are changes in the main branch
 
 - [ ] ⁠Add AWS credentials to GitHub repo secrets and update the pipeline to push the image to the ECR repo instead of the Docker Hub
 
