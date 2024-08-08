@@ -1,0 +1,43 @@
+# ⁠Add AWS credentials to GitHub repo secrets and update the pipeline to push the image to the ECR repo instead of the Docker Hub
+# Going to use actions from -> https://github.com/marketplace?query=aws-actions
+name: Build and Push Image to ECR
+run-name: Build and Push Image to ECR
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  ecr:
+    name: Build and Push Image to ECR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # We need to configure the AWS credentials
+      # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+      # What happens here is that the AWS credentials are set as environment variables
+      # Used to authenticate with AWS ECR
+      # https://github.com/marketplace/actions/configure-aws-credentials-action-for-github-actions
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ${{secrets.AWS_REGION}}
+      # Login to AWS ECR
+      - name: Login to Amazon ECR
+        # We need this id to get an output of this step to use it in the next step
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      # Build, Tag, and Push Image to Amazon ECR
+      - name: Build, Tag, and Push Image to Amazon ECR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          # Tagging the image with the ECR repository URI
+          # repository-uri is an output from the login-ecr step
+          # uri = https://aws_account_id.dkr.ecr.region.amazonaws.com/repository-name
+          tags: ${{steps.login-ecr.outputs.repository-uri}}:latest
