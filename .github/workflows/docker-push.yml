@@ -1,7 +1,7 @@
 # Pipeline to build and push Docker image to Docker Hub when there are changes in the main branch
 # Going to use actions from -> https://github.com/marketplace?query=docker
-name: Docker Build and Push Docker Image
-run-name: Build and Push Docker Image
+name: Build and Push Image to DockerHub
+run-name: Build and Push Image to DockerHub
 on:
   push:
     branches:
