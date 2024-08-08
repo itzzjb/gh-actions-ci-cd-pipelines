@@ -2,7 +2,7 @@
 
 - [x] ⁠Create a new pipeline to build and push Docker image to Docker Hub when there are changes in the main branch
 
-- [ ] ⁠Add AWS credentials to GitHub repo secrets and update the pipeline to push the image to the ECR repo instead of the Docker Hub
+- [x] ⁠Add AWS credentials to GitHub repo secrets and update the pipeline to push the image to the ECR repo instead of the Docker Hub
 
 - [ ] ⁠Update pipeline to deploy Docker image to EC2 instance
 
