@@ -34,10 +34,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
       # Build, Tag, and Push Image to Amazon ECR
       - name: Build, Tag, and Push Image to Amazon ECR
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          # Tagging the image with the ECR repository URI
-          # repository-uri is an output from the login-ecr step
-          # uri = https://aws_account_id.dkr.ecr.region.amazonaws.com/repository-name
-          tags: ${{steps.login-ecr.outputs.repository-uri}}:latest
+        id: build-image
+        # Create environment variables to use in the next steps
+        env:
+          # Getting the output called registry from the previous step (id: login-ecr)
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: github-actions
+          IMAGE_TAG: latest
+        run: |
+          docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
