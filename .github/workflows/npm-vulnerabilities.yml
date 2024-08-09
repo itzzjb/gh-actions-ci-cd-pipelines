@@ -20,7 +20,7 @@ jobs:
         run: npm ci
       # Audit npm vulnerabilities and generate a report
       - name: Audit npm vulnerabilities and generate report
-        run: npm audit --json > npm-audit-report.json
+        run: npm audit --json | tee npm-audit-report.json
       # Upload the report as an artifact so that it can be downloaded
       - name: Upload npm audit report
         uses: actions/upload-artifact@v2
