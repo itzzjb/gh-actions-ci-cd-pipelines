@@ -3,7 +3,9 @@
 name: Build and Push Image to DockerHub
 run-name: Build and Push Image to DockerHub
 on:
-  pull_request:
+  # The code get pushed when the pull request is merged to the main branch from another branch
+  # So, we are going to trigger this workflow when the code is pushed to the main branch
+  push:
     branches:
       - main
   workflow_dispatch:

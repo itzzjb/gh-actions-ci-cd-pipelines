@@ -17,3 +17,5 @@
 ---
 
 - [ ] Create a new pipeline to build your frontend application and deploy it to the NGINX server
+
+---
