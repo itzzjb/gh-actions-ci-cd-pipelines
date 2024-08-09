@@ -7,6 +7,8 @@ on:
   pull_request:
     types:
       - opened
+      # We also want to trigger this workflow when the PR is edited
+      - edited
     branches:
       - main
   workflow_dispatch:
