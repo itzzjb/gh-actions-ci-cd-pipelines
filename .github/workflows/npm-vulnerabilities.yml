@@ -2,12 +2,12 @@
 name: Scan npm Vulnerabilities
 run-name: Scan npm Vulnerabilities
 on:
-  #   push:
-  #     branches:
-  #       - main
-  #   pull_request:
-  #     branches:
-  #       - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 jobs:
   npm-vulnerabilities:
@@ -25,5 +25,5 @@ jobs:
       - name: Upload npm audit report
         uses: actions/upload-artifact@v2
         with:
-          path: npm-audit-report.json
           name: Vulnerability Report
+          path: npm-audit-report.json
