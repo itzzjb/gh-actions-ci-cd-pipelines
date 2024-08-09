@@ -19,4 +19,4 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Scan npm vulnerabilities
-        run: bash scripts/scan-for-vulnerabilities.sh
+        run: bash ./scripts/scan_for_vulnerabilities.sh
