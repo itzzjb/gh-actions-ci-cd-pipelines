@@ -2,12 +2,12 @@
 name: Scan npm Vulnerabilities
 run-name: Scan npm Vulnerabilities
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  #   push:
+  #     branches:
+  #       - main
+  #   pull_request:
+  #     branches:
+  #       - main
   workflow_dispatch:
 jobs:
   npm-vulnerabilities:
