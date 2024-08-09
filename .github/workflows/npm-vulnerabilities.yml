@@ -1,14 +1,7 @@
 # Workflow to scan npm vulnerabilities
 name: Scan npm Vulnerabilities
 run-name: Scan npm Vulnerabilities
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+on: workflow_dispatch
 jobs:
   npm-vulnerabilities:
     name: Scan npm Vulnerabilities
