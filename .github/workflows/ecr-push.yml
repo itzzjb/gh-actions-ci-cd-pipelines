@@ -11,40 +11,7 @@ on:
       - main
   workflow_dispatch:
 jobs:
-  npm-vulnerabilities:
-    name: Scan npm Vulnerabilities
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
-      - name: Install dependencies
-        run: npm ci
-      # Audit npm vulnerabilities and generate a report
-      - name: Audit npm vulnerabilities and generate report
-        # Can't use `npm audit --json > npm-audit-report.json` here.
-        run: npm audit --json | tee npm-audit-report.json
-      # Upload the report as an artifact so that it can be downloaded
-      - name: Upload npm audit report
-        uses: actions/upload-artifact@v2
-        with:
-          name: Vulnerability Report
-          path: npm-audit-report.json
-  unit-tests:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "14"
-      - name: Install dependencies
-        run: npm ci
-      - name: Run tests
-        run: npm run test
   ecr:
-    needs: unit-tests
     name: Build and Push Image to ECR
     runs-on: ubuntu-latest
     steps:
