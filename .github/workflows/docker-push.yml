@@ -3,7 +3,8 @@
 name: Build and Push Image to DockerHub
 run-name: Build and Push Image to DockerHub
 on:
-  pull_request:
+  # Pushed when the pull request is merged to the main branch from another branch
+  push:
     branches:
       - main
   workflow_dispatch:
