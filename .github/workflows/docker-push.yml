@@ -3,9 +3,6 @@
 name: Build and Push Image to DockerHub
 run-name: Build and Push Image to DockerHub
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
