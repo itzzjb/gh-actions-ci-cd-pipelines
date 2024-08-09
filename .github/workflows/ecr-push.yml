@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 jobs:
   ecr:
     name: Build and Push Image to ECR
