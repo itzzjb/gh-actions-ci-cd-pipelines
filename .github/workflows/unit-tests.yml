@@ -1,7 +1,14 @@
 # ⁠Pipeline to run unit tests and build when PR is opened
 name: Unit Tests
 run-name: Unit Tests
-on: workflow_dispatch
+on:
+  # We are only going to trigger this workflow using status check of a PR
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
+  workflow_dispatch:
 jobs:
   unit-tests:
     name: Unit Tests
