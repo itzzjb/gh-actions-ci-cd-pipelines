@@ -12,7 +12,7 @@
 
 - [ ] ⁠Update pipeline to scan for vulnerabilities
 
-- [ ] Add GitHub branch rule to the main branch to require pull request approvals and status checks
+- [x] Add GitHub branch rule to the main branch to require pull request approvals and status checks
 
 ---
 
