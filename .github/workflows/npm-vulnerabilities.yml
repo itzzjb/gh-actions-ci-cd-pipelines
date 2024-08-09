@@ -18,5 +18,12 @@ jobs:
         uses: actions/checkout@v4
       - name: Install dependencies
         run: npm ci
-      - name: Scan npm vulnerabilities
-        run: bash ./scripts/scan-for-vulnerabilities.sh
+      # Audit npm vulnerabilities and generate a report
+      - name: Audit npm vulnerabilities and generate report
+        run: npm audit --json > npm-audit-report.json
+      # Upload the report as an artifact so that it can be downloaded
+      - name: Upload npm audit report
+        uses: actions/upload-artifact@v2
+        with:
+          path: npm-audit-report.json
+          name: Vulnerability Report
