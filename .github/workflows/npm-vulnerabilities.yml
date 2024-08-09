@@ -1,0 +1,22 @@
+# Workflow to scan npm vulnerabilities
+name: Scan npm Vulnerabilities
+run-name: Scan npm Vulnerabilities
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  npm-vulnerabilities:
+    name: Scan npm Vulnerabilities
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Scan npm vulnerabilities
+        run: bash scripts/npm-vulnerabilities.sh
