@@ -8,7 +8,7 @@
 
 ---
 
-- [ ] ⁠Create a new pipeline to run unit tests and build when PR is opened
+- [x] ⁠Create a new pipeline to run unit tests and build when PR is opened
 
 - [ ] ⁠Update pipeline to scan for vulnerabilities
 
