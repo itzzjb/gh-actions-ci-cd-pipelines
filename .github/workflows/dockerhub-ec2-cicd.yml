@@ -30,3 +30,19 @@ jobs:
         with:
           push: true
           tags: itzzjb/docker-react:latest
+  deploy:
+    needs: docker
+    name: Deploy to EC2
+    # We have self hosted a EC2 instance as a runner from the repository settings
+    # Now, we are going to use that runner to deploy the Docker image to the EC2 instance
+    # We can manually installed Docker on the EC2 instance
+    runs-on: self-hosted
+    steps:
+      - name: Pull the Docker Image
+        run: sudo docker pull itzzjb/docker-react:latest
+      - name: Remove the existing container
+        # rm -f -> Remove the container forcefully
+        # We need to set || true to ignore the error if the container does not exist
+        run: sudo docker rm -f docker-react || true
+      - name: Run the Docker Container
+        run: sudo docker run -d -p 3000:3000 --name docker-react itzzjb/docker-react:latest
