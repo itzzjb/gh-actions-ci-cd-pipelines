@@ -10,7 +10,7 @@
 
 - [x] ⁠Create a new pipeline to run unit tests and build when PR is opened
 
-- [ ] ⁠Update pipeline to scan for vulnerabilities
+- [x] ⁠Update pipeline to scan for vulnerabilities
 
 - [x] Add GitHub branch rule to the main branch to require pull request approvals and status checks
 
