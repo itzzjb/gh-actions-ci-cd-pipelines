@@ -46,3 +46,16 @@ jobs:
         run: sudo docker rm -f docker-react || true
       - name: Run the Docker Container
         run: sudo docker run -d -p 3000:3000 --name docker-react itzzjb/docker-react:latest
+# Note:
+# The './run.sh' script is used to start the GitHub Actions self-hosted runner.
+# When executed, it initiates the runner process that listens for jobs from GitHub Actions.
+
+# The script:
+# 1. Registers the runner with the GitHub repository or organization.
+# 2. Enters a loop, continuously polling GitHub for any incoming workflow jobs to execute.
+# 3. Executes the job on the host machine when one is received.
+# 4. Handles cleanup after the job is completed, then resumes polling for the next job.
+
+# If the runner process is stopped (e.g., by closing the terminal), the runner will no longer
+# be able to receive or execute jobs. Using 'nohup ./run.sh &' allows the runner to continue
+# running in the background, ensuring it remains active even after the SSH session ends.
