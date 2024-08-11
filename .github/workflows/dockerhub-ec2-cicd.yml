@@ -36,7 +36,7 @@ jobs:
     # We have self hosted a EC2 instance as a runner from the repository settings
     # Now, we are going to use that runner to deploy the Docker image to the EC2 instance
     # We can manually installed Docker on the EC2 instance
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       # Login to Docker Hub
       - name: Login to Docker Hub
