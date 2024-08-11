@@ -59,3 +59,22 @@ jobs:
 # If the runner process is stopped (e.g., by closing the terminal), the runner will no longer
 # be able to receive or execute jobs. Using 'nohup ./run.sh &' allows the runner to continue
 # running in the background, ensuring it remains active even after the SSH session ends.
+
+# To configure using nginx as a reverse proxy server, follow the steps below:
+# 1. Install nginx on the EC2 instance.
+# 2. Create a new configuration file in the /etc/nginx/sites-available directory.
+# 3. Find the IP Address of the docker container using the command 'docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name'.
+# 4. Add the following configuration to the new file:
+# server {
+
+#    ... cont.
+
+#     location / {
+#         proxy_pass http://container_ip:container_port;
+
+#     ... cont.
+#     }
+
+# }
+# 5. Create a symbolic link to the sites-enabled directory using the command 'sudo ln -s /etc/nginx/sites-available/file_name /etc/nginx/sites-enabled/'.
+# 6. Restart the nginx service using the command 'sudo systemctl restart nginx'.
