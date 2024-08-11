@@ -5,9 +5,9 @@ run-name: CICD pipeline with ECR and EC2
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 jobs:
   ecr:
@@ -44,3 +44,16 @@ jobs:
         run: |
           docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  deploy:
+    needs: ecr
+    name: Deploy to EC2
+    runs-on: self-hosted
+    steps:
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Pull the Docker Image
+        run: sudo docker pull ${{ steps.ecr.outputs.ECR_REGISTRY }}/github-actions:latest
+      - name: Remove the existing container
+        run: sudo docker rm -f docker-react || true
+      - name: Run the Docker Container
+        run: sudo docker run -d -p 3001:3000 --name docker-react ${{ steps.ecr.outputs.ECR_REGISTRY }}/github-actions:latest
