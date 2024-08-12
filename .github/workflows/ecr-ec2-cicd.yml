@@ -71,7 +71,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             sudo apt-get update &&
-            sudo apt-get install -y awscli
+            # sudo apt-get install -y awscli , doesn't work
+            sudo apt-get install -y unzip &&
+            curl \"https://d1uj6qtbmh3dt5.cloudfront.net/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\" &&
+            unzip awscliv2.zip &&
+            sudo ./aws/install &&
+            aws --version
           "
       - name: Login to Amazon ECR on EC2
         run: |
