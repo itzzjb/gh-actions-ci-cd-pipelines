@@ -4,7 +4,7 @@
 name: CICD pipeline with ECR and EC2
 run-name: CICD pipeline with ECR and EC2
 
-# We are defining permissions for the workflow to upload the scan results to the GitHub Security tab
+# We are defining permissions for this workflow to upload the scan results to the GitHub Security tab
 permissions:
   contents: read
   security-events: write
@@ -40,12 +40,12 @@ jobs:
           scan-type: "fs"
           ignore-unfixed: true
           format: "sarif"
-          output: "trivy-results.sarif"
+          output: "trivy-fs-scan-results.sarif"
           severity: "CRITICAL"
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: "trivy-results.sarif"
+          sarif_file: "trivy-fs-scan-results.sarif"
   ecr:
     needs: fsScan
     name: Build and Push Image to ECR
@@ -73,6 +73,19 @@ jobs:
         run: |
           docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Image Vulnerability Scan with Trivy
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          scan-type: "image"
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-image-scan-results.sarif"
+          severity: "CRITICAL"
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-image-scan-results.sarif"
   ec2:
     needs: ecr
     name: Deploy Docker Container to EC2
