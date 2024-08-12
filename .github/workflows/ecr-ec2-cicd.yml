@@ -28,18 +28,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Vulnerabilities Scan with Trivy
+      - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          scan-type: "fs" # Corrected to string format
-          path: "." # Corrected key to 'path' instead of 'scan-ref'
-          config: "trivy.yml" # Corrected key to 'config' instead of 'trivy-config'
-          format: "sarif" # Ensures the output is in SARIF format
-          output: "trivy-fs-scan.sarif"
-      - name: Upload SARIF to GitHub
-        uses: github/codeql-action/upload-sarif@v1
+          scan-type: "fs"
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL"
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: trivy-fs-scan.sarif
+          sarif_file: "trivy-results.sarif"
   ecr:
     needs: fsScan
     name: Build and Push Image to ECR
