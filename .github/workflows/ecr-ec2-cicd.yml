@@ -79,7 +79,6 @@ jobs:
             # Get the password to login to ECR and login through Docker
             aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
           "
-
       - name: Pull and Run Docker Image on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions-ecr.pem $SSH_USER@$SSH_HOST "
