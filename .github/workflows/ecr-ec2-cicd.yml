@@ -69,15 +69,16 @@ jobs:
           "
       - name: Install AWS CLI on EC2
         run: |
-           ssh -o StrictHostKeyChecking=no -i ~/.ssh/ecr.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             sudo apt-get update &&
+            # sudo apt-get install -y awscli, doesn't work
             sudo apt-get install -y unzip curl &&
             curl -O https://d1uj6qtbmh3dt5.cloudfront.net/awscli-exe-linux-x86_64.zip &&
             unzip awscli-exe-linux-x86_64.zip &&
             sudo ./aws/install &&
             aws --version
           "
-      - name: Authenticate Docker to AWS ECR
+      - name: Login to Amazon ECR on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             # Get the password to login to ECR and login through Docker
