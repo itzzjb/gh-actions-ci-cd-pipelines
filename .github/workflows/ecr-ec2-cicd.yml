@@ -80,8 +80,12 @@ jobs:
             # Install snapd
             sudo apt-get install -y snapd &&
             # Install AWS CLI
-            # sudo apt install awscli -y, does not work on Ubuntu 20.04
-            sudo snap install aws-cli --classic  
+            if ! command -v aws &> /dev/null; then
+              # sudo apt install awscli -y, does not work on Ubuntu 20.04        
+              sudo snap install aws-cli --classic;
+            else
+              echo 'AWS CLI is already installed';
+            fi
             aws --version
             "
       - name: Configure AWS Credentials on EC2
