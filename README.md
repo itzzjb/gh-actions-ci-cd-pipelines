@@ -4,7 +4,7 @@
 
 - [x] ⁠Add AWS credentials to GitHub repo secrets and update the pipeline to push the image to the ECR repo instead of the Docker Hub
 
-- [ ] ⁠Update pipeline to deploy Docker image to EC2 instance
+- [x] ⁠Update pipeline to deploy Docker image to EC2 instance
 
 ---
 
