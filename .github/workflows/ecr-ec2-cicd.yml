@@ -9,6 +9,17 @@ on:
     branches:
       - main
   workflow_dispatch:
+# Defining environment variables for the whole workflow
+env:
+  SSH_USER: ${{secrets.SSH_USER}}
+  SSH_HOST: ${{secrets.SSH_HOST}}
+  SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+  AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+  AWS_REGION: ${{secrets.AWS_REGION}}
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
 jobs:
   ecr:
     name: Build and Push Image to ECR
@@ -24,9 +35,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: ${{secrets.AWS_REGION}}
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          aws-region: $AWS_REGION
       # Login to AWS ECR
       - name: Login to Amazon ECR
         # We need this id to get an output of this step to use it in the next step
@@ -35,12 +46,45 @@ jobs:
       # Build, Tag, and Push Image to Amazon ECR
       - name: Build, Tag, and Push Image to Amazon ECR
         id: build-image
-        # Create environment variables to use in the next steps
-        env:
-          # Getting the output called registry from the previous step (id: login-ecr)
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: github-actions
-          IMAGE_TAG: latest
         run: |
           docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  # ec2:
+  #   needs: ecr
+  #   name: Deploy Docker Container to EC2
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Setup SSH
+  #       run: |
+  #         mkdir -p ~/.ssh/
+  #         echo "$SSH_PRIVATE_KEY" > ~/.ssh/github-actions.pem
+  #         chmod 600 ~/.ssh/github-actions.pem
+  #     - name: Install and Start Docker on EC2
+  #       run: |
+  #         ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
+  #           sudo apt-get update &&
+  #           sudo apt-get install -y docker.io &&
+  #           sudo systemctl start docker &&
+  #           sudo systemctl enable docker &&
+  #         "
+  #     - name: Install AWS CLI on EC2
+  #       run: |
+  #         ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
+  #           sudo apt-get update &&
+  #           sudo apt-get install -y awscli
+  #         "
+  #     - name: Login to Amazon ECR on EC2
+  #       run: |
+  #         ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
+  #           aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
+  #         "
+
+  #     - name: Pull and Run Docker Image on EC2
+  #       run: |
+  #         ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
+  #           sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
+  #           # Stop and remove the container if it is already running
+  #           sudo docker stop docker-react-ecr &&
+  #           sudo docker rm docker-react-ecr &&
+  #           sudo docker run --name:docker-react-ecr -d -p 3000:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  #         "
