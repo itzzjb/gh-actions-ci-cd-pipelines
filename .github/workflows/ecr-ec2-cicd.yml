@@ -34,7 +34,13 @@ jobs:
           scan-type: fs
           scan-ref: .
           trivy-config: trivy.yml
+          output: trivy-fs-scan.sarif
+      - name: Upload SARIF to GitHub
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: trivy-fs-scan.sarif
   ecr:
+    needs: fsScan
     name: Build and Push Image to ECR
     runs-on: ubuntu-latest
     steps:
