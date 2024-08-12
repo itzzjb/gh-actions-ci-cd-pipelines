@@ -9,7 +9,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-# Defining environment variables for the wh
+# Defining environment variables for the whole workflow
 env:
   SSH_USER: ${{secrets.SSH_USER}}
   SSH_HOST: ${{secrets.SSH_HOST}}
