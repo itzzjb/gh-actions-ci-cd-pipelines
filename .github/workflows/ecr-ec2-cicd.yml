@@ -5,15 +5,9 @@ run-name: CICD pipeline with ECR and EC2
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
-  # push:
-  #   branches:
-  #     - main
-
-  # Run this workflow after the dockerhub-ec2-cicd.yml workflow is completed
-  workflow_run:
-    workflows: ["CICD pipeline with DockerHub and EC2"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
   workflow_dispatch:
 # Defining environment variables for the whole workflow
 env:
@@ -120,4 +114,4 @@ jobs:
             # Pull the image from ECR and run it
             sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
             sudo docker run --name docker-react-ecr -d -p 3000:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          " || exit 1
+          "
