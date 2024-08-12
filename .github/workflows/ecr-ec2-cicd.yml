@@ -3,6 +3,12 @@
 # For vulnerabilities scanning, we are going to use Trivy -> https://github.com/marketplace/actions/aqua-security-trivy
 name: CICD pipeline with ECR and EC2
 run-name: CICD pipeline with ECR and EC2
+
+# We are defining permissions for the workflow to upload the scan results to the GitHub Security tab
+permissions:
+  contents: read
+  security-events: write
+
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
