@@ -113,5 +113,5 @@ jobs:
             sudo docker rmi -f $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
             # Pull the image from ECR and run it
             sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
-            sudo docker run --name docker-react-ecr -d -p 3000:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            sudo docker run --name docker-react-ecr -d -p 80:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           "

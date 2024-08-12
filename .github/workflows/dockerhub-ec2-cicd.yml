@@ -83,5 +83,5 @@ jobs:
             sudo docker rm docker-react || true &&
             # Pull the image from Docker Hub and run it
             sudo docker pull itzzjb/docker-react:latest &&
-            sudo docker run --name docker-react  -d -p 80:3000 itzzjb/docker-react:latest
+            sudo docker run --name docker-react  -d -p 3000:3000 itzzjb/docker-react:latest
           " || exit 1
