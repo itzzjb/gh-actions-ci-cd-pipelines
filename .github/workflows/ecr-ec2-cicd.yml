@@ -134,3 +134,10 @@ jobs:
             # Scan the Docker image for vulnerabilities
             trivy image --severity HIGH,CRITICAL $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           "
+      # Scan file system for vulnerabilities using Trivy
+      - name: Scan File System for Vulnerabilities
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
+            # Scan the file system for vulnerabilities
+            trivy filesystem --severity HIGH,CRITICAL .
+          "
