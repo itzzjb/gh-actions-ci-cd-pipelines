@@ -51,6 +51,12 @@ jobs:
           # Change the permission of the file to read and write
           chmod 600 ~/.ssh/github-actions.pem
       - name: Install and Start Docker on EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         run: |
           # We are ssh-ing into the EC2 instance and running the commands (Command are in the quotes)
           # -o StrictHostKeyChecking=no is used to avoid the prompt to add the host to the known hosts
@@ -61,11 +67,23 @@ jobs:
             sudo systemctl enable docker 
           "
       - name: Login to Docker Hub on EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           "
       - name: Pull and Run Docker Image on EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             sudo docker pull itzzjb/docker-react:latest &&
