@@ -2,6 +2,12 @@
 # Going to use actions from -> https://github.com/marketplace?query=docker
 name: CICD pipeline with DockerHub and EC2
 run-name: CICD pipeline with DockerHub and EC2
+
+# We are defining permissions for this workflow to upload the scan results to the GitHub Security tab
+permissions:
+  contents: read
+  security-events: write
+
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
