@@ -61,9 +61,10 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: ${{secrets.AWS_REGION}}
+          # You can't directly use $AWS_ACCESS_KEY_ID, $AWS_SECRET_ACCESS_KEY, $AWS_REGION here
+          aws-access-key-id: ${{env.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{env.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ${{env.AWS_REGION}}
       # Login to AWS ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
@@ -75,7 +76,8 @@ jobs:
       - name: Image Vulnerability Scan with Trivy
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }}
+          # You can't directly use $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG here
+          image-ref: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           scan-type: "image"
           ignore-unfixed: true
           format: "sarif"
