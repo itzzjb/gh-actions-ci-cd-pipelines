@@ -10,10 +10,10 @@ on:
   #     - main
 
   # Run this workflow after ec2-ecr-cicd.yml is run
-  workflow_run:
-    workflows: ["CICD pipeline with ECR and EC2"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["CICD pipeline with ECR and EC2"]
+  #   types:
+  #     - completed
   workflow_dispatch:
 # Defining environment variables for the whole workflow
 env:
