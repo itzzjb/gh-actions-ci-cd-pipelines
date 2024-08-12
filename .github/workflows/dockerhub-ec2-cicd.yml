@@ -5,9 +5,15 @@ run-name: CICD pipeline with DockerHub and EC2
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+
+  # Run this workflow after ec2-ecr-cicd.yml is run
+  workflow_run:
+    workflows: ["CICD pipeline with ECR and EC2"]
+    types:
+      - completed
   workflow_dispatch:
 # Defining environment variables for the whole workflow
 env:
