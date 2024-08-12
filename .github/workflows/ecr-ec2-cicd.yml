@@ -78,13 +78,20 @@ jobs:
             sudo snap install aws-cli --classic  
             aws --version
             "
+      - name: Configure AWS Credentials on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
+            # Configure AWS credentials
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID &&
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY &&
+            aws configure set region $AWS_REGION
+          "
       - name: Login to Amazon ECR on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             # Get the password to login to ECR and login through Docker
             aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
           "
-
       - name: Pull and Run Docker Image on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
