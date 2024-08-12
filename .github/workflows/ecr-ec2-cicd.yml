@@ -5,9 +5,15 @@ run-name: CICD pipeline with ECR and EC2
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+
+  # Run this workflow after the dockerhub-ec2-cicd.yml workflow is completed
+  workflow_run:
+    workflows: ["CICD pipeline with DockerHub and EC2"]
+    types:
+      - completed
   workflow_dispatch:
 # Defining environment variables for the whole workflow
 env:
@@ -72,7 +78,7 @@ jobs:
               echo 'Docker is already installed.'
             # fi is used to end the if statement
             fi
-          "
+          " || exit 1
       - name: Install AWS CLI on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
@@ -87,7 +93,7 @@ jobs:
               echo 'AWS CLI is already installed';
             fi
             aws --version
-            "
+            " || exit 1
       - name: Configure AWS Credentials on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
@@ -95,13 +101,13 @@ jobs:
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID &&
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY &&
             aws configure set region $AWS_REGION
-          "
+          " || exit 1
       - name: Login to Amazon ECR on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             # Get the password to login to ECR and login through Docker
             aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
-          "
+          " || exit 1
       - name: Pull and Run Docker Image on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
@@ -114,4 +120,4 @@ jobs:
             # Pull the image from ECR and run it
             sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
             sudo docker run --name docker-react-ecr -d -p 3000:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          "
+          " || exit 1
