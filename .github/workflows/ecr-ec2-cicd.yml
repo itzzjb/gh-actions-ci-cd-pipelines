@@ -96,8 +96,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             # Stop and remove the container if it is already running
-            sudo docker stop docker-react-ecr &&
-            sudo docker rm docker-react-ecr &&
+            # Added || true to avoid the error if the container is not running
+            sudo docker stop docker-react-ecr || true &&
+            sudo docker rm docker-react-ecr || true &&
             # Remove the image if it already exists
             sudo docker rmi -f $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
             # Pull the image from ECR and run it
