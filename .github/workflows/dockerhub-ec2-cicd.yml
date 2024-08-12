@@ -70,5 +70,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             sudo docker pull itzzjb/docker-react:latest &&
+            # Stop and remove the container if it is already running
+            sudo docker stop docker-react &&
+            sudo docker rm docker-react &&
+            # Run the new container
             sudo docker run --name docker-react  -d -p 80:3000 itzzjb/docker-react:latest
           "
