@@ -95,9 +95,12 @@ jobs:
       - name: Pull and Run Docker Image on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
-            sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
             # Stop and remove the container if it is already running
             sudo docker stop docker-react-ecr &&
             sudo docker rm docker-react-ecr &&
+            # Remove the image if it already exists
+            sudo docker rmi -f $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
+            # Pull the image from ECR and run it
+            sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG &&
             sudo docker run --name docker-react-ecr -d -p 3000:3000 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           "
