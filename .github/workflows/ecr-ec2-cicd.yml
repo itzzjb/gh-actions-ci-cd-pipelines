@@ -71,8 +71,13 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
             sudo apt-get update &&
-            sudo apt-get install -y awscli
-          "
+            # Install snapd
+            sudo apt-get install -y snapd &&
+            # Install AWS CLI
+            # sudo apt install awscli -y, does not work on Ubuntu 20.04
+            sudo snap install aws-cli --classic  
+            aws --version
+            "
       - name: Login to Amazon ECR on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/github-actions.pem $SSH_USER@$SSH_HOST "
