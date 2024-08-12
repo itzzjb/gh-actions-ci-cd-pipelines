@@ -49,7 +49,7 @@ jobs:
           # Write the private key to the file called github-actions.pem
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/github-actions.pem
           # Change the permission of the file to read-only
-          chmod 400 ~/.ssh/github-actions.pem
+          chmod 600 ~/.ssh/github-actions.pem
       - name: Install and Start Docker on EC2
         run: |
           # We are ssh-ing into the EC2 instance and running the commands (Command are in the quotes)
