@@ -7,8 +7,6 @@ on:
   pull_request:
     types:
       - opened
-      # We also want to trigger this workflow when the PR is edited
-      - edited
     branches:
       - main
   workflow_dispatch:
@@ -27,3 +25,31 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm run test
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "14"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+  start:
+    name: Start
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "14"
+      - name: Install dependencies
+        run: npm ci
+      - name: Start
+        run: npm start

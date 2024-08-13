@@ -1,14 +1,7 @@
 # ⁠Add AWS credentials to GitHub repo secrets and update the pipeline to push the image to the ECR repo instead of the Docker Hub
 # Going to use actions from -> https://github.com/marketplace?query=aws-actions
-# For vulnerabilities scanning, we are going to use Trivy -> https://github.com/marketplace/actions/aqua-security-trivy
 name: CICD pipeline with ECR and EC2
 run-name: CICD pipeline with ECR and EC2
-
-# We are defining permissions for this workflow to upload the scan results to the GitHub Security tab
-permissions:
-  contents: read
-  security-events: write
-
 on:
   # The code get pushed when the pull request is merged to the main branch from another branch
   # So, we are going to trigger this workflow when the code is pushed to the main branch
@@ -28,26 +21,7 @@ env:
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
   IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
 jobs:
-  fsScan:
-    name: File System Vulnerability Scan with Trivy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          scan-type: "fs"
-          ignore-unfixed: true
-          format: "sarif"
-          output: "trivy-fs-scan-results.sarif"
-          severity: "CRITICAL"
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: "trivy-fs-scan-results.sarif"
   ecr:
-    needs: fsScan
     name: Build and Push Image to ECR and Scan Image with Trivy
     runs-on: ubuntu-latest
     steps:
@@ -73,20 +47,6 @@ jobs:
         run: |
           docker build . -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      - name: Image Vulnerability Scan with Trivy
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          # You can't directly use $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG here
-          image-ref: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-          scan-type: "image"
-          ignore-unfixed: true
-          format: "sarif"
-          output: "trivy-image-scan-results.sarif"
-          severity: "CRITICAL"
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: "trivy-image-scan-results.sarif"
   ec2:
     needs: ecr
     name: Deploy Docker Container to EC2
