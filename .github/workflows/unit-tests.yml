@@ -7,6 +7,10 @@ on:
   pull_request:
     types:
       - opened
+      # reopened is used to trigger the workflow when a PR is reopened
+      # When a new commit is pushed to the PR while it is opened the workflow will not be triggered
+      # The PR has to be reopened for the workflow to be triggered
+      - reopened
     branches:
       - main
   workflow_dispatch:
@@ -26,6 +30,7 @@ jobs:
       - name: Run tests
         run: npm run test
   build:
+    needs: unit-tests
     name: Build Application
     runs-on: ubuntu-latest
     steps:
