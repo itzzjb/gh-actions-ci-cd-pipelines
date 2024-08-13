@@ -15,7 +15,3 @@
 - [x] Add GitHub branch rule to the main branch to require pull request approvals and status checks
 
 ---
-
-- [ ] Create a new pipeline to build your frontend application and deploy it to the NGINX server
-
----
