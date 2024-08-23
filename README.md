@@ -1,3 +1,8 @@
+
+### [Demontration Video on LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7229149930500587521/)
+
+### [Detailed Article on Medium](https://medium.com/@desilvabethmin/cicd-pipeline-using-github-actions-7e7d85996b7b)
+
 # Objectives Of the Project
 
 - [x] ⁠Create a new pipeline to build and push Docker image to Docker Hub when there are changes in the main branch
@@ -14,6 +19,3 @@
 
 - [x] Add GitHub branch rule to the main branch to require pull request approvals and status checks
 
----
-
-For the Demontration -> [Click Here](https://www.linkedin.com/feed/update/urn:li:activity:7229149930500587521/)
